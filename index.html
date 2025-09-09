@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>威霖&津婷</title>
+    <!-- 引入 Tailwind CSS 以快速進行UI設計 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Google 字體，讓整體視覺更柔和 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        /* 引入手寫英文字體 */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        /* 定義手寫字體的 class */
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* 定義浮動的動畫效果 (Animation) */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px); /* 向上移動 10px */
+            }
+        }
+
+        .photo-tile {
+            transform-origin: center center; /* 確保旋轉和縮放以中心為基準 */
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .photo-tile img {
+            animation-name: float;
+            animation-iteration-count: infinite; /* 無限次重複 */
+            animation-timing-function: ease-in-out; /* 緩入緩出效果 */
+        }
+
+        /* 設定放大後的樣式 */
+        .enlarged {
+            position: fixed; /* 固定在視窗上，不受滾動影響 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.2) rotate(0deg) !important;
+            z-index: 100; /* 確保在最上層 */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75); /* 更明顯的陰影 */
+        }
+        
+        .enlarged img {
+            animation: none;
+        }
+
+        .enlarged:hover {
+            transform: translate(-50%, -50%) scale(1.2) rotate(0deg) !important; /* 保持原樣 */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75); /* 陰影也保持原樣 */
+        }
+
+        /* 暗色背景遮罩 */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8); /* 半透明黑色 */
+            z-index: 50; /* 在照片和背景牆之間 */
+            opacity: 0;
+            pointer-events: none; /* 預設不可點擊 */
+            transition: opacity 0.3s ease-in-out; /* 透明度變化的過渡效果 */
+        }
+
+        .backdrop.visible {
+            opacity: 1;
+            pointer-events: auto; /* 設為可點擊 */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased overflow-hidden">
+    <!-- 用於放大照片時的背景遮罩 -->
+    <div id="backdrop" class="backdrop"></div>
+
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-cyan-400">威霖 & 津婷</h1>
+            <p class="text-rose-300 mt-2 font-cursive text-2xl">Just married!</p>
+        </header>
+
+        <!-- 照片牆容器 -->
+        <main id="photo-wall" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+            <!-- 照片磚塊將由 JavaScript 動態生成並插入此處 -->
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const photoWall = document.getElementById('photo-wall');
+            const backdrop = document.getElementById('backdrop');
+            let currentPlaceholder = null;
+
+            // 【關鍵修改】請將您從 GitHub 複製的圖片網址貼到下面的陣列中
+            // 每個網址用引號 "" 或 '' 包起來，並用逗號 , 隔開
+            const photoUrls = [
+                // 範例： "https://raw.githubusercontent.com/您的使用者名稱/您的專案名稱/main/images/photo-01.jpg",
+                // 範例： "https://raw.githubusercontent.com/您的使用者名稱/您的專案名稱/main/images/photo-02.png",
+                // --- 請從這裡開始貼上您的網址 ---
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/1.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/2.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/3.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/4.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/5.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/6.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/7.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/8.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/9.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/10.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/11.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/12.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/13.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/14.png',
+                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/15.png',
+                // --- 貼到這裡結束 ---
+            ];
+
+            photoUrls.forEach((url, index) => {
+                const tile = document.createElement('div');
+                tile.className = 'photo-tile aspect-square rounded-lg overflow-hidden cursor-pointer shadow-lg hover:shadow-cyan-400/50 hover:scale-105';
+                
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `婚禮照片 ${index + 1}`;
+                img.className = 'w-full h-full object-cover';
+                img.onerror = function() { this.src = 'https://placehold.co/400x400/FF0000/FFFFFF?text=載入失敗'; };
+
+                tile.appendChild(img);
+                photoWall.appendChild(tile);
+            });
+            
+            const tiles = document.querySelectorAll('.photo-tile');
+
+            tiles.forEach(tile => {
+                const duration = Math.random() * 5 + 5; 
+                const delay = Math.random() * 5;      
+                const rotation = (Math.random() * 40) - 20;
+
+                tile.style.transform = `rotate(${rotation}deg)`;
+
+                const img = tile.querySelector('img');
+                if (img) {
+                    img.style.animationDuration = `${duration}s`;
+                    img.style.animationDelay = `-${delay}s`;
+                }
+
+                tile.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    
+                    const wasThisEnlarged = tile.classList.contains('enlarged');
+
+                    const anyEnlargedTile = document.querySelector('.photo-tile.enlarged');
+                    if (anyEnlargedTile) {
+                        anyEnlargedTile.classList.remove('enlarged');
+                    }
+                    if (currentPlaceholder) {
+                        currentPlaceholder.remove();
+                        currentPlaceholder = null;
+                    }
+                    backdrop.classList.remove('visible');
+
+                    if (!wasThisEnlarged) {
+                        const placeholder = tile.cloneNode(true);
+                        placeholder.style.visibility = 'hidden';
+                        placeholder.querySelector('img').style.animation = 'none'; 
+                        
+                        tile.parentNode.insertBefore(placeholder, tile);
+                        currentPlaceholder = placeholder;
+                        
+                        tile.classList.add('enlarged');
+                        backdrop.classList.add('visible');
+                    }
+                });
+            });
+
+            backdrop.addEventListener('click', () => {
+                const enlargedTile = document.querySelector('.photo-tile.enlarged');
+                if (enlargedTile) {
+                    enlargedTile.classList.remove('enlarged');
+                    if (currentPlaceholder) {
+                        currentPlaceholder.remove();
+                        currentPlaceholder = null;
+                    }
+                    backdrop.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
