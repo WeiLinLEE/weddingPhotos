@@ -14,6 +14,14 @@
         
         body {
             font-family: 'Noto Sans TC', sans-serif;
+            /* 【新增】隱藏滾動條 (適用於 IE, Edge, Firefox) */
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+
+        /* 【新增】隱藏滾動條 (適用於 Chrome, Safari, Opera) */
+        body::-webkit-scrollbar {
+            display: none;
         }
 
         /* 定義手寫字體的 class */
@@ -89,7 +97,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white antialiased overflow-hidden">
+<body class="bg-gray-900 text-white antialiased">
     <!-- 用於放大照片時的背景遮罩 -->
     <div id="backdrop" class="backdrop"></div>
 
@@ -111,29 +119,12 @@
             const backdrop = document.getElementById('backdrop');
             let currentPlaceholder = null;
 
-            // 【關鍵修改】請將您從 GitHub 複製的圖片網址貼到下面的陣列中
-            // 每個網址用引號 "" 或 '' 包起來，並用逗號 , 隔開
-            const photoUrls = [
-                // 範例： "https://raw.githubusercontent.com/您的使用者名稱/您的專案名稱/main/images/photo-01.jpg",
-                // 範例： "https://raw.githubusercontent.com/您的使用者名稱/您的專案名稱/main/images/photo-02.png",
-                // --- 請從這裡開始貼上您的網址 ---
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/1.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/2.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/3.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/4.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/5.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/6.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/7.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/8.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/9.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/10.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/11.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/12.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/13.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/14.jpg',
-                'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/15.jpg',
-                // --- 貼到這裡結束 ---
-            ];
+            // 【關鍵修改】動態生成您的照片網址 (1.jpg 到 15.jpg)
+            const photoUrls = [];
+            const baseUrl = 'https://raw.githubusercontent.com/WeiLinLEE/weddingPhotos/refs/heads/main/images/';
+            for (let i = 1; i <= 15; i++) {
+                photoUrls.push(`${baseUrl}${i}.jpg`);
+            }
 
             photoUrls.forEach((url, index) => {
                 const tile = document.createElement('div');
@@ -208,3 +199,4 @@
     </script>
 </body>
 </html>
+
