@@ -47,17 +47,25 @@
             position: fixed; /* 固定在視窗上，不受滾動影響 */
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(1.2) rotate(0deg) !important;
+            /* 【關鍵修改】移除固定的 scale，改用 max-width/height 來做自適應縮放 */
+            width: auto;
+            height: auto;
+            max-width: 90vw; /* 最大寬度為視窗寬度的 90% */
+            max-height: 90vh; /* 最大高度為視窗高度的 90% */
+            transform: translate(-50%, -50%) rotate(0deg) !important;
             z-index: 100; /* 確保在最上層 */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75); /* 更明顯的陰影 */
         }
         
         .enlarged img {
             animation: none;
+            /* 【關鍵修改】讓圖片完整顯示，而不是裁切 */
+            object-fit: contain;
         }
 
         .enlarged:hover {
-            transform: translate(-50%, -50%) scale(1.2) rotate(0deg) !important; /* 保持原樣 */
+            /* 【關鍵修改】移除 scale，因為尺寸已經由 max-width/height 控制 */
+            transform: translate(-50%, -50%) rotate(0deg) !important; /* 保持原樣 */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75); /* 陰影也保持原樣 */
         }
 
@@ -200,4 +208,3 @@
     </script>
 </body>
 </html>
-
